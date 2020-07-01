@@ -34,6 +34,18 @@ fs.readdir("./commands/", (err, files) => {
     });
 });
 
+
+const express = require('express');
+const path = require("path");
+const PORT = process.env.PORT || 5000;
+
+express()
+.use(express.static(path.join(__dirname, 'public')))
+.set("views", path.join(__dirname, "views"))
+.set("view engine", "ejs")
+.get("/", (req, res) => res.render("pages/index"))
+.listen(PORT, () => console.log(`Listening on ${  PORT  }`))
+
 bot.on("ready", () => {
     console.log(`O Bot ficou online com sucesso! Está atualmente em ${bot.guilds.size} servidores, em ${bot.channels.size} canais e com ${bot.users.size} usuários.`);
     bot.user.setActivity(`Estou em ${bot.guilds.size} servidores`, {type: "STREAMING"});
