@@ -1,0 +1,27 @@
+{
+  "name": "greev3n",
+  "version": "1.0.0",
+  "description": "Bot feito para discord ",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mrs_Isa#1382",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.6.3",
+    "dotenv": "^8.2.0",
+    "ffmpeg": "0.0.4",
+    "firebase": "^7.15.5",
+    "fluent-ffmpeg": "^2.1.2",
+    "fs": "0.0.1-security",
+    "heroku": "^7.42.2",
+    "jimp": "^0.13.0",
+    "mongoose": "^5.9.20",
+    "nodemon": "^2.0.4",
+    "opusscript": "0.0.7",
+    "yt-search": "^1.1.2",
+    "ytdl-core-discord": "^1.2.0"
+  }
+}
