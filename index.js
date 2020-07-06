@@ -1,13 +1,11 @@
 const Discord = require("discord.js");
 const fs = require("fs");
 const config = require("./config.json");
-const bot = new Discord.Client({disableEveryone: true});
+const bot = new Discord.Client();
 
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
 
-    let coins = require("./coins.json");
-const { disconnect } = require("process");
 
 bot.queues = new Map();
 
@@ -35,20 +33,17 @@ fs.readdir("./commands/", (err, files) => {
 });
 
 
-const express = require('express');
-const path = require("path");
-const PORT = process.env.PORT || 5000;
-
-express()
-.use(express.static(path.join(__dirname, 'public')))
-.set("views", path.join(__dirname, "views"))
-.set("view engine", "ejs")
-.get("/", (req, res) => res.render("pages/index"))
-.listen(PORT, () => console.log(`Listening on ${  PORT  }`))
-
 bot.on("ready", () => {
+
+    let activities = ["Utilize <help para obter ajuda", `Estou em ${bot.guilds.size} servidores!`, "Criado por: Mrs_Isa", "Moderação e Administração", "Paz e amor 😇"],
+    i = 0;
+    setInterval( () => bot.user.setActivity(`${activities[i++ % activities.length]}`, {
+        type: "STREAMING"
+    }), 1000 * 10);
+    bot.user
+    .setStatus("online")
+     .catch(console.error)
     console.log(`O Bot ficou online com sucesso! Está atualmente em ${bot.guilds.size} servidores, em ${bot.channels.size} canais e com ${bot.users.size} usuários.`);
-    bot.user.setActivity(`Estou em ${bot.guilds.size} servidores`, {type: "STREAMING"});
 });
 
 
@@ -67,6 +62,8 @@ bot.on("guildDelete", guild => {
     bot.user.setActivity(`Estou em ${bot.guilds.size} servidores`, {type: "STREAMING"});
 }); 
 
+
+
 bot.on("message", async message => {
     if(message.author.bot) return;
     if(message.channel.type === "dm") return;
@@ -78,37 +75,21 @@ bot.on("message", async message => {
         }
     }
 
-    if(!coins[message.author.id]){
-        coins[message.author.id] = {
-            coins: 0
-        };
-    }
-
-    let coinAmt = Math.floor(Math.random() * 1) +1;
-    let baseAmt = Math.floor(Math.random() * 1) +1;
-
-    if(coinAmt === baseAmt){
-        coins[message.author.id] = {
-            coins: coins[message.author.id].coins + coinAmt
-        };
-        fs.writeFile("./coins.json", JSON.stringify(coins), (err) => {
-            if(err) console.log(err)
-        });
-    }
-
     let prefix = prefixes[message.guild.id].prefixes;
     let messageArray = message.content.split(" ");
     let command = messageArray[0];
     let args = messageArray.slice(1);
 
     if(!message.content.startsWith(prefix)) return;
-
+    if(!command) return message.channel.send(`**${message.author} Esse comando não existe!**`);
+ 
     let arquivocmd = bot.commands.get(command.slice(config.prefix.length));
     if(arquivocmd) arquivocmd.run(bot, message, args);
 
     let commandfile = bot.commands.get(bot.aliases.get(command.slice(prefix.length)));
     if(commandfile) commandfile.run(bot, message, args);
 
+    
 });
 
 
